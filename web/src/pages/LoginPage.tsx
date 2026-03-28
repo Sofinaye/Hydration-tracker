@@ -1,14 +1,17 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { getLastUsedEmail, getRegisteredEmails } from '../lib/auth'
 import './AuthPages.css'
 
 export function LoginPage() {
   const { user, login } = useAuth()
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(() => getLastUsedEmail())
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+
+  const savedEmails = getRegisteredEmails()
 
   if (user) return <Navigate to="/" replace />
 
@@ -29,6 +32,25 @@ export function LoginPage() {
       <div className="authCard">
         <div className="authBrand">Welcome back</div>
         <div className="authSub">Log in to track today’s hydration.</div>
+
+        {savedEmails.length > 0 ? (
+          <div className="savedAccounts">
+            <div className="savedAccountsLabel">Saved accounts on this device</div>
+            <div className="accountChips" role="list">
+              {savedEmails.map((addr) => (
+                <button
+                  key={addr}
+                  type="button"
+                  className="accountChip tap"
+                  role="listitem"
+                  onClick={() => setEmail(addr)}
+                >
+                  {addr}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
 
         <form className="authForm" onSubmit={onSubmit}>
           {error ? <div className="authError">{error}</div> : null}

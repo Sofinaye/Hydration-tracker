@@ -1,5 +1,6 @@
 const USERS_KEY = 'hydration.users.v1'
 const SESSION_KEY = 'hydration.session.v1'
+const LAST_EMAIL_KEY = 'hydration.auth.last-email.v1'
 
 export type UserRecord = {
   email: string
@@ -46,7 +47,35 @@ function loadUsers(): UserRecord[] {
 }
 
 function saveUsers(users: UserRecord[]) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users))
+  try {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users))
+  } catch {
+    // Quota or private mode — accounts may not persist; callers can surface a message if needed.
+  }
+}
+
+function setLastUsedEmail(email: string) {
+  try {
+    localStorage.setItem(LAST_EMAIL_KEY, normalizeEmail(email))
+  } catch {
+    /* ignore */
+  }
+}
+
+export function getLastUsedEmail(): string {
+  try {
+    const v = localStorage.getItem(LAST_EMAIL_KEY)
+    return typeof v === 'string' ? v : ''
+  } catch {
+    return ''
+  }
+}
+
+/** Emails that have an account saved in this browser (localStorage). */
+export function getRegisteredEmails(): string[] {
+  return loadUsers()
+    .map((u) => u.email)
+    .sort((a, b) => a.localeCompare(b))
 }
 
 export function loadSession(): Session | null {
@@ -55,15 +84,25 @@ export function loadSession(): Session | null {
     if (!raw) return null
     const parsed = JSON.parse(raw) as Partial<Session>
     if (typeof parsed.email !== 'string' || !parsed.email) return null
-    return { email: parsed.email }
+    const email = normalizeEmail(parsed.email)
+    const users = loadUsers()
+    if (!users.some((u) => u.email === email)) {
+      saveSession(null)
+      return null
+    }
+    return { email }
   } catch {
     return null
   }
 }
 
 export function saveSession(session: Session | null) {
-  if (!session) localStorage.removeItem(SESSION_KEY)
-  else localStorage.setItem(SESSION_KEY, JSON.stringify(session))
+  try {
+    if (!session) localStorage.removeItem(SESSION_KEY)
+    else localStorage.setItem(SESSION_KEY, JSON.stringify(session))
+  } catch {
+    /* ignore */
+  }
 }
 
 export function isValidEmail(email: string) {
@@ -82,6 +121,7 @@ export async function signUp(emailRaw: string, password: string): Promise<{ ok: 
   const passwordHash = await sha256Hex(salt + password)
   users.push({ email, salt, passwordHash })
   saveUsers(users)
+  setLastUsedEmail(email)
   saveSession({ email })
   return { ok: true }
 }
@@ -97,6 +137,7 @@ export async function signIn(emailRaw: string, password: string): Promise<{ ok: 
   const passwordHash = await sha256Hex(user.salt + password)
   if (passwordHash !== user.passwordHash) return { ok: false, error: 'Invalid email or password.' }
 
+  setLastUsedEmail(email)
   saveSession({ email })
   return { ok: true }
 }

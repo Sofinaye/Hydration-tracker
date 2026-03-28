@@ -33,7 +33,9 @@ export function SignupPage() {
     <div className="authShell">
       <div className="authCard">
         <div className="authBrand">Create account</div>
-        <div className="authSub">Sign up to save your hydration plan on this device.</div>
+        <div className="authSub">
+          Sign up to save your hydration plan. Accounts stay on this device in your browser until you clear site data.
+        </div>
 
         <form className="authForm" onSubmit={onSubmit}>
           {error ? <div className="authError">{error}</div> : null}
