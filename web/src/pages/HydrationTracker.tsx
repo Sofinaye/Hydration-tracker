@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import '../App.css'
 import { useAuth } from '../context/AuthContext'
 import {
@@ -127,7 +128,10 @@ export function HydrationTracker() {
         <div className="title">Hydration</div>
         <div className="topbarRight">
           <div className="pill">{todayKey}</div>
-          <button type="button" className="btn ghost smallBtn" onClick={() => logout()}>
+          <Link className="btn ghost smallBtn tap" to="/stats">
+            Stats
+          </Link>
+          <button type="button" className="btn ghost smallBtn tap" onClick={() => logout()}>
             Log out
           </button>
         </div>
