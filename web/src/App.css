@@ -1,11 +1,13 @@
 #root {
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .app {
   max-width: 560px;
   margin: 0 auto;
-  padding: 16px 16px 32px;
+  padding: 0 max(16px, env(safe-area-inset-left)) max(28px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-right));
+  padding-top: 0;
 }
 
 .topbar {
@@ -13,13 +15,29 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 12px;
+  padding: max(12px, env(safe-area-inset-top)) 12px 14px;
   position: sticky;
   top: 0;
+  z-index: 10;
   backdrop-filter: blur(14px);
   background: rgba(11, 16, 32, 0.6);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  margin: 0 -16px 16px;
+  margin-left: calc(-1 * max(16px, env(safe-area-inset-left)));
+  margin-right: calc(-1 * max(16px, env(safe-area-inset-right)));
+  margin-bottom: 16px;
+}
+
+.topbarRight {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  max-width: min(100%, 220px);
+}
+
+.mainContent {
+  padding-bottom: 8px;
 }
 
 .title {
@@ -107,6 +125,11 @@ input[type='number'] {
   border-color: rgba(255, 90, 90, 0.35);
 }
 
+.btn.ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -171,4 +194,22 @@ input[type='number'] {
   border-radius: 10px;
   font-size: 13px;
   font-weight: 700;
+}
+
+.tap {
+  min-height: 44px;
+}
+
+.segTitle {
+  font-weight: 800;
+}
+
+@media (max-width: 380px) {
+  .big {
+    font-size: 24px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
