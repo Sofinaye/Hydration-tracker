@@ -1,0 +1,107 @@
+.authShell {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+}
+
+.authCard {
+  width: min(100%, 400px);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  padding: 22px 18px;
+}
+
+.authBrand {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  margin-bottom: 4px;
+}
+
+.authSub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 18px;
+}
+
+.authForm {
+  display: grid;
+  gap: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.fieldInput {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.22);
+  color: inherit;
+  padding: 14px 12px;
+  font-size: 16px;
+  outline: none;
+}
+
+.fieldInput:focus {
+  border-color: rgba(80, 130, 255, 0.75);
+}
+
+.authError {
+  font-size: 13px;
+  color: #ffb4b4;
+  background: rgba(255, 80, 80, 0.12);
+  border: 1px solid rgba(255, 120, 120, 0.25);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.authSubmit {
+  width: 100%;
+  margin-top: 4px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(80, 130, 255, 0.65);
+  background: linear-gradient(135deg, rgba(80, 130, 255, 0.85), rgba(0, 245, 255, 0.4));
+  color: #0a1024;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.authSubmit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.authFooter {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.authLink {
+  color: #9db7ff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.authLink:hover {
+  text-decoration: underline;
+}

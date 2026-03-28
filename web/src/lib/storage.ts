@@ -1,16 +1,20 @@
 import type { HydrationEntry, HydrationSettings } from './types'
 
-const SETTINGS_KEY = 'hydration.settings.v1'
-const ENTRIES_KEY = 'hydration.entries.v1'
+const SETTINGS_PREFIX = 'hydration.settings.v1'
+const ENTRIES_PREFIX = 'hydration.entries.v1'
 
 const defaultSettings: HydrationSettings = {
   dailyPlanLiters: 2,
   remindersEnabled: false,
 }
 
-export function loadSettings(): HydrationSettings {
+function userScope(email: string, prefix: string) {
+  return `${prefix}::${encodeURIComponent(email.trim().toLowerCase())}`
+}
+
+export function loadSettings(email: string): HydrationSettings {
   try {
-    const raw = localStorage.getItem(SETTINGS_KEY)
+    const raw = localStorage.getItem(userScope(email, SETTINGS_PREFIX))
     if (!raw) return defaultSettings
     const parsed = JSON.parse(raw) as Partial<HydrationSettings>
     return {
@@ -28,13 +32,13 @@ export function loadSettings(): HydrationSettings {
   }
 }
 
-export function saveSettings(settings: HydrationSettings) {
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+export function saveSettings(email: string, settings: HydrationSettings) {
+  localStorage.setItem(userScope(email, SETTINGS_PREFIX), JSON.stringify(settings))
 }
 
-export function loadEntries(): HydrationEntry[] {
+export function loadEntries(email: string): HydrationEntry[] {
   try {
-    const raw = localStorage.getItem(ENTRIES_KEY)
+    const raw = localStorage.getItem(userScope(email, ENTRIES_PREFIX))
     if (!raw) return []
     const parsed = JSON.parse(raw) as unknown
     if (!Array.isArray(parsed)) return []
@@ -53,7 +57,6 @@ export function loadEntries(): HydrationEntry[] {
   }
 }
 
-export function saveEntries(entries: HydrationEntry[]) {
-  localStorage.setItem(ENTRIES_KEY, JSON.stringify(entries))
+export function saveEntries(email: string, entries: HydrationEntry[]) {
+  localStorage.setItem(userScope(email, ENTRIES_PREFIX), JSON.stringify(entries))
 }
-
